@@ -7,13 +7,20 @@ const Login = () => {
     const [senha, setSenha] = useState('');
     const navigate = useNavigate();
 
-    const url = "https://revista-back-end.vercel.app/"; // Substitua pela URL correta da sua API
+    const url = "https://revista-back-end.vercel.app/";
 
     const validarLogin = async () => {
         try {
+            console.log("Iniciando validação de login...");
             // Fazendo a requisição para verificar o usuário
             const response = await fetch(url);
+            
+            if (!response.ok) {
+                throw new Error("Erro ao conectar à API.");
+            }
+
             const data = await response.json();
+            console.log("Dados recebidos da API:", data);
 
             // Verifica se email e senha existem no banco de dados
             const usuarioValido = data.find(
@@ -21,10 +28,10 @@ const Login = () => {
             );
 
             if (usuarioValido) {
-                // Credenciais válidas: Redireciona para /home
-                navigate('/home');
+                console.log("Usuário válido:", usuarioValido);
+                navigate('/home'); // Redireciona para /home
             } else {
-                // Credenciais inválidas: Mostra um alerta
+                console.log("Credenciais inválidas.");
                 alert("Conta inválida! Verifique o email e a senha.");
             }
         } catch (error) {
@@ -34,8 +41,8 @@ const Login = () => {
     };
 
     return (
-        <div className={styles.fundo}> {/* Container principal */}
-            <div className={styles.quadrado}> {/* Quadrado centralizado */}
+        <div className={styles.fundo}>
+            <div className={styles.quadrado}>
                 <h1>Login</h1>
                 <form
                     onSubmit={(e) => {
